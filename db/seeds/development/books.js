@@ -1,7 +1,9 @@
+'use strict';
+
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
   return knex('books').del()
-    .then(function() {
+    .then(() => {
       return Promise.all([
         // Inserts seed entries
         knex('books').insert([{
@@ -76,7 +78,7 @@ exports.seed = function(knex, Promise) {
           cover_url: 'http://akamaicovers.oreilly.com/images/0636920032977/lrg.jpg',
           created_at: new Date('2016-06-26 14:26:16 UTC'),
           updated_at: new Date('2016-06-26 14:26:16 UTC')
-        }]),
+        }])
       ]);
     });
 };
