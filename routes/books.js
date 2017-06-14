@@ -52,26 +52,28 @@ router.get('/books/:id', (req, res) => {
 
 router.post('/books', (req, res) => {
   knex('books')
-    .insert({
-      title: req.body.title,
-      author: req.body.author,
-      genre: req.body.genre,
-      description: req.body.description,
-      cover_url: req.body.coverUrl
-    }, '*')
+    .insert(humps.decamelizeKeys(req.body), '*')
+    // .insert({
+    //   title: req.body.title,
+    //   author: req.body.author,
+    //   genre: req.body.genre,
+    //   description: req.body.description,
+    //   cover_url: req.body.coverUrl
+    // }, '*')
     .then((books) => {
       if (!books) {
         res.sendStatus(404);
       }
       const book = books[0];
-      res.json({
-        id: book.id,
-        coverUrl: book.cover_url,
-        author: book.author,
-        description: book.description,
-        title: book.title,
-        genre: book.genre
-      })
+      res.status(200).json(humps.camelizeKeys(book));
+      // res.json({
+      //   id: book.id,
+      //   coverUrl: book.cover_url,
+      //   author: book.author,
+      //   description: book.description,
+      //   title: book.title,
+      //   genre: book.genre
+      // })
     })
     .catch(err =>
       {console.log('errrrrrr', err)
