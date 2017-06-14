@@ -15,7 +15,6 @@ router.get('/books', (req, res) => {
       'author',
       'genre',
       'description',
-      //humps.camelize('cover_url'),
       'cover_url AS coverUrl',
       'created_at AS createdAt',
       'updated_at AS updatedAt'
@@ -75,12 +74,76 @@ router.post('/books', (req, res) => {
       //   genre: book.genre
       // })
     })
-    .catch(err =>
-      {console.log('errrrrrr', err)
-      res.sendStatus(500)});
+    .catch(err => {
+      console.log('errrrrrr', err)
+      res.sendStatus(500)
+    });
 });
 
+router.patch('/books/:id', (req, res) => {
+  knex('books')
+    .select(
+      'id',
+      'title',
+      'author',
+      'genre',
+      'description',
+      'cover_url AS coverUrl',
+      'created_at AS createdAt',
+      'updated_at AS updatedAt'
+    )
+    .where('id', req.params.id)
+    .then((book) => {
+      if (!book) {
+        res.sendStatus(404);
+      }
+      return knex('books')
+        .update(humps.decamelizeKeys(req.body), '*')
+        .where('id', req.params.id)
+    })
+    .then((books) => {
+      res.status(200);
+      res.send(humps.camelizeKeys(books[0]));
+    })
+    .catch(err => {
+      res.sendStatus(500)
+    });
+});
 
+router.delete('/books/:id', (req, res, next) => {
+  // console.log('REQUEST:', req.params.id);
+  var deletedBook;
+
+  knex('books')
+    .select(
+      'id',
+      'title',
+      'author',
+      'genre',
+      'description',
+      'cover_url AS coverUrl',
+      'created_at AS createdAt',
+      'updated_at AS updatedAt'
+    )
+    .where('id', req.params.id)
+    .then((book) => {
+      if (!book) {
+        return next();
+      }
+      deletedBook = book;
+      return knex('books')
+        .del()
+        .where('id', req.params.id)
+    })
+    .then(() => {
+      delete deletedBook[0].id;
+      res.status(200);
+      res.send(humps.camelizeKeys(deletedBook[0]));
+    })
+    .catch(err => {
+      res.sendStatus(500)
+    });
+});
 
 
 module.exports = router;
