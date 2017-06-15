@@ -94,7 +94,6 @@ router.get( '/token', ( req, res ) => {
             // console.log('ERROR:', err);
             res.sendStatus( 500 );
           } );
-
       } );
   } );
 module.exports = router;
