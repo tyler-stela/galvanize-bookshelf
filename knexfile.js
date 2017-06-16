@@ -21,6 +21,14 @@ module.exports = {
       directory: `${__dirname}/db/seeds/development`
     }
   },
-
-  production: {}
+  production: {
+    client: 'pg',
+    connection: 'postgres://localhost/bookshelf_production',
+    migrations: {
+      directory: `${__dirname}/db/migrations`
+    },
+    seeds: {
+      directory: `${__dirname}/db/seeds/development`
+    }
+  }
 };
