@@ -34,14 +34,13 @@ router.get( '/token', ( req, res ) => {
 router.post( '/token', ( req, res ) => {
   var email = req.body.email;
   var password = req.body.password;
-  console.log( 'EMAIL ITS LOOKING FOR:', email );
-  
+
   return knex( 'users' )
     .select( '*' )
     .where( 'email', email )
     .then( ( users ) => {
-      if ( !users[ 0 ] ) {
-        res.status( 400 ).send( 'Bad email or password' );
+      if ( !users[0] || users[0].email !== email ) {
+        res.status( 400 ).set('Content-Type', 'text/plain').send( 'Bad email or password' );
         return;
       }
 
@@ -50,7 +49,7 @@ router.post( '/token', ( req, res ) => {
 
       bcrypt.compare( password, storedPassword ).then( ( resolutionOfBcrypt ) => {
           if ( resolutionOfBcrypt === false ) {
-            res.status( 400 ).send( 'Bad email or password' );
+            res.status( 400 ).set('Content-Type', 'text/plain').send( 'Bad email or password' );
             return;
           } else {
             const jwtPayload = {
@@ -74,7 +73,6 @@ router.post( '/token', ( req, res ) => {
           }
         } )
         .catch( err => {
-          console.log( '500 fail' );
           res.sendStatus( 500 );
         } );
     } );
