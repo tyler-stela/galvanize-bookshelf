@@ -31,8 +31,8 @@ router.get('/favorites/:id', (req, res) => {
     .innerJoin('books', 'favorites.id', 'books.id' )
     .where('book_id', req.query.bookId)
     .first()
-    .then((favorite_book) => {
-      if (!favorite_book) {
+    .then((favoriteBook) => {
+      if (!favoriteBook) {
         res.status(200).send(false)
       }
       res.status(200).send(true)
@@ -41,6 +41,51 @@ router.get('/favorites/:id', (req, res) => {
       res.sendStatus(404)
     })
 });
+
+router.post('/favorites', (req, res) => {
+  knex('favorites')
+    .insert({book_id: req.body.bookId, user_id: 1}, '*')
+    .into('favorites')
+    .then((newFavorite) => {
+      // console.log('new favorite?', newFavorite[0]);
+      if (!newFavorite[0]) {
+        res.sendStatus(401);
+      }
+      res.status(200).json(humps.camelizeKeys(newFavorite[0]));
+    })
+    .catch(err => {
+      // console.log('catch all', err);
+      res.sendStatus(404)
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
