@@ -8,20 +8,11 @@ const knex = require('../knex.js');
 const router = express.Router();
 
 router.get('/books', (req, res) => {
-  knex('books')
-    .select(
-      'id',
-      'title',
-      'author',
-      'genre',
-      'description',
-      'cover_url AS coverUrl',
-      'created_at AS createdAt',
-      'updated_at AS updatedAt'
-    )
+    knex('books')
+    .select('*')
     .orderBy('title', 'asc')
     .then((books) => {
-      res.status(200).json(books);
+      res.status(200).json(humps.camelizeKeys(books));
     })
     .catch(err => res.sendStatus(404));
 });
@@ -34,13 +25,34 @@ router.get('/books/:id', (req, res) => {
     .then((book) => {
       if (!book) {
         res.sendStatus(404);
+        return;
       }
         res.status(200).json(humps.camelizeKeys({book}).book);
     })
-    .catch(err => res.sendStatus(500));
+    .catch(err => res.sendStatus(404));
 });
 
 router.post('/books', (req, res) => {
+  if (req.body.title === undefined) {
+    res.status(400).set('Content-Type', 'text/plain').send('Title must not be blank');
+    return;
+  }
+  if (req.body.author === undefined) {
+    res.status(400).set('Content-Type', 'text/plain').send('Author must not be blank');
+    return;
+  }
+  if (req.body.genre === undefined) {
+    res.status(400).set('Content-Type', 'text/plain').send('Genre must not be blank');
+    return;
+  }
+  if (req.body.description === undefined) {
+    res.status(400).set('Content-Type', 'text/plain').send('Description must not be blank');
+    return;
+  }
+  if (req.body.coverUrl === undefined) {
+    res.status(400).set('Content-Type', 'text/plain').send('Cover URL must not be blank');
+    return;
+  }
   knex('books')
     .insert(humps.decamelizeKeys(req.body), '*')
     .then((books) => {
@@ -72,7 +84,7 @@ router.patch('/books/:id', (req, res) => {
       res.send(humps.camelizeKeys(books[0]));
     })
     .catch(err => {
-      res.sendStatus(500);
+      res.sendStatus(404);
     });
 });
 
@@ -96,7 +108,7 @@ router.delete('/books/:id', (req, res, next) => {
       res.send(humps.camelizeKeys(deletedBook[0]));
     })
     .catch(err => {
-      res.sendStatus(500);
+      res.sendStatus(404);
     });
 });
 
