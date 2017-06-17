@@ -25,7 +25,7 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: `postgres://${DATABASE_URL}/bookshelf_production`,
+    connection: `${DATABASE_URL}/bookshelf_production`,
     migrations: {
       directory: `${__dirname}/db/migrations`
     },
