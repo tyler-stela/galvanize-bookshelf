@@ -1,6 +1,6 @@
 'use strict';
 
-const DATABASE_URL = 'postgres://whvpmhxyseuosf:cc6af349e5a4e4ffa1580a987fddf1791ee261ef9ea119bc24bcecb5e31217bd@ec2-54-235-120-39.compute-1.amazonaws.com:5432/dcai5jf3s4vinj'
+const DATABASE_URL = 'postgres://boqshaexdhwmce:46efb730adf90474701514f6184c1c93c25fc4b0d63e1b13b3de37c6c7b1f5d0@ec2-54-243-107-66.compute-1.amazonaws.com:5432/dc5mf16vjl9vcd'
 
 module.exports = {
   development: {
@@ -25,7 +25,7 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: `postgres://${DATABASE_URL}/bookshelf_production`,
+    connection: `${DATABASE_URL}/bookshelf_production`,
     migrations: {
       directory: `${__dirname}/db/migrations`
     },
