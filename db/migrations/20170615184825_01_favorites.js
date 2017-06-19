@@ -10,11 +10,6 @@ exports.up = function(knex, Promise) {
   });
 };
 
-// Unhandled rejection error: insert or update on table "favorites" violates foreign key constraint "favorites_user_id_foreign"
-
-
 exports.down = function(knex, Promise) {
   return knex.schema.dropTable('favorites');
 };
-
-// │book_id         │ integer                  │not null references books(id) on delete cascade index │
